@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 //had to update tsconfig.json to be able to @actions dir
 import { generateForm } from "@/actions/generateForm";
 import { useFormState, useFormStatus } from "react-dom";
+import { useSession, signIn } from "next-auth/react";
 
 type Props = {};
 
@@ -36,6 +37,8 @@ const FormGenerator = (props: Props) => {
   // useFormState( fn, initialState, permalink? )
   const [state, formAction] = useFormState(generateForm, initialState);
   const [open, setOpen] = useState(false);
+  const session = useSession();
+  console.log(session);
 
   //when state.message changes, check for success to close dialog
   useEffect(() => {
@@ -46,7 +49,11 @@ const FormGenerator = (props: Props) => {
   }, [state.message]);
 
   const onFormCreate = () => {
-    setOpen(true);
+    if (session.data?.user) {
+      setOpen(true);
+    } else {
+      signIn();
+    }
   };
 
   return (
