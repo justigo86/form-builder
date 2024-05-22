@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import { db } from "./db/schema";
+import { db } from "./db/index";
 
 export const {
   handlers: { GET, POST },

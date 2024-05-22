@@ -5,18 +5,14 @@ import {
   primaryKey,
   integer,
 } from "drizzle-orm/pg-core";
-import postgres from "postgres";
-import { drizzle } from "drizzle-orm/postgres-js";
 import type { AdapterAccountType } from "next-auth/adapters";
 
-const connectionString =
-  process.env.DATABASE_URL ||
-  "postgres://postgres:postgres@localhost:5432/drizzle" ||
-  "postgres://postgres:postgres@localhost:5432/postgres";
-const pool = postgres(connectionString, { max: 1 });
-
-export const db = drizzle(pool);
-//NOTE: might have to update based on drizzle(pool, {schema})
+// const connectionString =
+//   process.env.DATABASE_URL ||
+//   "postgres://postgres:postgres@localhost:5432/drizzle" ||
+//   "postgres://postgres:postgres@localhost:5432/postgres";
+// const pool = postgres(connectionString, { max: 1 });
+// export const db = drizzle(pool);
 
 export const users = pgTable("user", {
   id: text("id")
