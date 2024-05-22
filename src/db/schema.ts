@@ -1,9 +1,13 @@
+import { relations } from "drizzle-orm";
 import {
   timestamp,
   pgTable,
   text,
   primaryKey,
   integer,
+  serial,
+  boolean,
+  pgEnum,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
 
@@ -13,6 +17,15 @@ import type { AdapterAccountType } from "next-auth/adapters";
 //   "postgres://postgres:postgres@localhost:5432/postgres";
 // const pool = postgres(connectionString, { max: 1 });
 // export const db = drizzle(pool);
+
+//drizzle form elements
+export const formElements = pgEnum("field_type", [
+  "RadioGroup",
+  "Select",
+  "Input",
+  "Textarea",
+  "Switch",
+]);
 
 export const users = pgTable("user", {
   id: text("id")
@@ -67,3 +80,48 @@ export const verificationTokens = pgTable(
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   })
 );
+
+//additional tables added
+//serial and boolean imported from Drizzle
+export const forms = pgTable("forms", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description"),
+  userId: text("user_Id"),
+  published: boolean("published"),
+});
+//define how the tables are related - many forms to one user
+export const formsRelations = relations(forms, ({ many, one }) => ({
+  questions: many(questions),
+  user: one(users, {
+    fields: [forms.userId],
+    references: [users.id],
+  }),
+}));
+
+export const questions = pgTable("questions", {
+  id: serial("id").primaryKey(),
+  text: text("text"),
+  fieldType: formElements("field_type"),
+  formId: integer("form_id"),
+});
+export const questionsRelations = relations(questions, ({ one, many }) => ({
+  form: one(forms, {
+    fields: [questions.formId],
+    references: [forms.id],
+  }),
+  fieldOptions: many(fieldOptions),
+}));
+
+export const fieldOptions = pgTable("field_options", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  value: text("value"),
+  questionId: integer("question_id"),
+});
+export const fieldOptionsRelations = relations(fieldOptions, ({ one }) => ({
+  question: one(questions, {
+    fields: [fieldOptions.questionId],
+    references: [questions.id],
+  }),
+}));
