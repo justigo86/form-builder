@@ -71,7 +71,7 @@ export async function generateForm(
     revalidatePath("/");
     return {
       message: "success",
-      data: json,
+      data: { formData, dbFormId },
     };
   } catch (e) {
     console.log(e);

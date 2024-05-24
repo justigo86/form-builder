@@ -14,6 +14,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { generateForm } from "@/actions/generateForm";
 import { useFormState, useFormStatus } from "react-dom";
 import { useSession, signIn } from "next-auth/react";
+import { redirect } from "next/navigation";
+import { navigate } from "../actions/navigateToForm";
 
 type Props = {};
 
@@ -44,8 +46,8 @@ const FormGenerator = (props: Props) => {
   useEffect(() => {
     if (state.message === "success") {
       setOpen(false);
+      navigate(state.data.formId);
     }
-    console.log(state);
   }, [state.message]);
 
   const onFormCreate = () => {
