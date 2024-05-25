@@ -62,7 +62,12 @@ const Form = (props: Props) => {
                         {index + 1}. {question.text}
                       </FormLabel>
                       <FormControl>
-                        <FormField element={question} key={index} />
+                        <FormField
+                          element={question}
+                          key={index}
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
                       </FormControl>
                     </FormItem>
                   )}

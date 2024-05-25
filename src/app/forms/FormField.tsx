@@ -4,7 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { QuestionSelectModel } from "@/types/form-types";
 import { FieldOptionSelectModel } from "@/types/form-types";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import React from "react";
+import React, { ChangeEvent } from "react";
 import {
   Select,
   SelectContent,
@@ -19,18 +19,20 @@ type Props = {
   element: QuestionSelectModel & {
     fieldOptions: Array<FieldOptionSelectModel>;
   };
+  value: string;
+  onChange: (value?: string | ChangeEvent<HTMLInputElement>) => void;
 };
 
-const FormField = ({ element }: Props) => {
+const FormField = ({ element, value, onChange }: Props) => {
   if (!element) return null;
 
   //components indicate the possible form elements
   const components = {
-    Input: () => <Input />,
+    Input: () => <Input onChange={onChange} />,
     Switch: () => <Switch />,
     Textarea: () => <Textarea />,
     Select: () => (
-      <Select>
+      <Select onValueChange={onChange}>
         <SelectTrigger>
           <SelectValue placeholder="Select an option" />
         </SelectTrigger>
@@ -47,7 +49,7 @@ const FormField = ({ element }: Props) => {
       </Select>
     ),
     RadioGroup: () => (
-      <RadioGroup>
+      <RadioGroup onValueChange={onChange}>
         {element.fieldOptions.map((option, index) => (
           <div
             key={`${option.text} ${option.value}`}
