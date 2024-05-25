@@ -14,7 +14,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { generateForm } from "@/actions/generateForm";
 import { useFormState, useFormStatus } from "react-dom";
 import { useSession, signIn } from "next-auth/react";
-import { redirect } from "next/navigation";
 import { navigate } from "../actions/navigateToForm";
 
 type Props = {};
