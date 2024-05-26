@@ -15,9 +15,12 @@ import {
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import FormField from "./FormField";
+import { Button } from "@/components/ui/button";
+import { publishForm } from "../actions/mutateForm";
 
 type Props = {
   form: Form;
+  editMode?: boolean;
 };
 
 //interface pulls in form-types
@@ -34,9 +37,12 @@ interface Form extends FormSelectModel {
 
 const Form = (props: Props) => {
   const form = useForm();
+  const { editMode } = props;
 
-  const handleSubmit = (data: any) => {
-    return console.log(data);
+  const handleSubmit = async (data: any) => {
+    if (editMode) {
+      await publishForm(props.form.id);
+    }
   };
 
   //uses conditional logic because the form structure depends on the type of answers
@@ -75,6 +81,7 @@ const Form = (props: Props) => {
               );
             }
           )}
+          <Button type="submit">{editMode ? "Publish" : "Submit"}</Button>
         </form>
       </ShadCNForm>
     </div>
