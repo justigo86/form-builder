@@ -5,7 +5,7 @@ import {
   FormSelectModel,
   QuestionSelectModel,
 } from "@/types/form-types";
-import React from "react";
+import React, { useState } from "react";
 import {
   Form as ShadCNForm,
   FormControl,
@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import FormField from "./FormField";
 import { Button } from "@/components/ui/button";
 import { publishForm } from "../actions/mutateForm";
+import FormPublishSuccess from "./FormPublishSuccess";
 
 type Props = {
   form: Form;
@@ -38,10 +39,17 @@ interface Form extends FormSelectModel {
 const Form = (props: Props) => {
   const form = useForm();
   const { editMode } = props;
+  const [successDialogOpen, setSuccessDialogOpen] = useState(false);
 
-  const handleSubmit = async (data: any) => {
+  const handleDialogChange = (open: boolean) => {
+    //update successDialogOpen
+    setSuccessDialogOpen(open);
+  };
+
+  const onSubmit = async (data: any) => {
     if (editMode) {
       await publishForm(props.form.id);
+      setSuccessDialogOpen(true);
     }
   };
 
@@ -52,7 +60,7 @@ const Form = (props: Props) => {
       <h3 className="text-md">{props.form.description}</h3>
       <ShadCNForm {...form}>
         <form
-          onSubmit={handleSubmit}
+          onSubmit={form.handleSubmit(onSubmit)}
           className="grid w-full max-w-3xl items-center gap-6 my-4"
         >
           {props.form.questions.map(
@@ -84,6 +92,12 @@ const Form = (props: Props) => {
           <Button type="submit">{editMode ? "Publish" : "Submit"}</Button>
         </form>
       </ShadCNForm>
+      {/* form publish dialog */}
+      <FormPublishSuccess
+        formId={props.form.id}
+        open={successDialogOpen}
+        onOpenChange={handleDialogChange}
+      />
     </div>
   );
 };
