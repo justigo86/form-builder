@@ -8,7 +8,7 @@ type NavLink = {
 
 type SidebarNavItem = {
   title: string;
-  disabled: boolean;
+  disabled?: boolean;
   external?: boolean;
   icon?: keyof typeof Icons;
 } & (
@@ -17,7 +17,8 @@ type SidebarNavItem = {
       items?: never;
     }
   | {
-      href?: string;
+      // href?: string;
+      href: string;
       items: NavLink[];
     }
 );

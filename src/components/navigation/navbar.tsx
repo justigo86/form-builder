@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 interface DashboardNavProps {
   items: SidebarNavItem[];
 }
-const navbar = ({ items }: DashboardNavProps) => {
+const DashboardNav = ({ items }: DashboardNavProps) => {
   const path = usePathname();
 
   if (!items?.length) return null;
@@ -42,4 +42,4 @@ const navbar = ({ items }: DashboardNavProps) => {
   );
 };
 
-export default navbar;
+export default DashboardNav;
