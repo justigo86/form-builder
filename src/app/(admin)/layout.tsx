@@ -1,6 +1,8 @@
 import DashboardNav from "@/components/navigation/navbar";
 import Header from "@/components/ui/header";
 import { SidebarNavItem } from "@/types/nav-types";
+import { SessionProvider } from "next-auth/react";
+import FormGenerator from "../form-generator";
 
 export default function AdminLayount({
   children,
@@ -39,14 +41,22 @@ export default function AdminLayount({
     ],
   };
   return (
-    <div>
+    <div className="flex min-h-screen flex-col space-y-6">
       <Header />
-      <div>
-        <aside>
+      <div className="container grid gap-12 md:grid-cols-[200px_1fr] flex-1">
+        <aside className="hidden w-[200px] flex-col md:flex pr-2 border-r justify-between">
           <DashboardNav items={dashboardConfig.sidebarNav} />
         </aside>
+        <main className="flex w-full flex-col overflow-hidden">
+          <header className="flex items-center">
+            <h1 className="text-4xl m-5 p-4 font-semibold">Dashboard</h1>
+            <SessionProvider>
+              <FormGenerator />
+            </SessionProvider>
+          </header>
+          {children}
+        </main>
       </div>
-      {children}
     </div>
   );
 }
