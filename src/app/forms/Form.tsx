@@ -47,9 +47,28 @@ const Form = (props: Props) => {
   };
 
   const onSubmit = async (data: any) => {
+    console.log(data);
     if (editMode) {
       await publishForm(props.form.id);
       setSuccessDialogOpen(true);
+    } else {
+      let answers = [];
+      for (const [questionId, value] of Object.entries(data)) {
+        const id = parseInt(questionId.replace("question-", ""));
+        let fieldOptionsId = null;
+        let textValue = null;
+        if (typeof value == "string" && value.includes("answerId_")) {
+          fieldOptionsId = parseInt(value.replace("answerId_", ""));
+        } else {
+          textValue = value;
+        }
+        answers.push({
+          questionId: id,
+          fieldOptionsId,
+          //using value because it is a field in the answers schema
+          value: textValue,
+        });
+      }
     }
   };
 

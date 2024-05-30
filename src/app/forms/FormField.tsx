@@ -28,7 +28,8 @@ const FormField = ({ element, value, onChange }: Props) => {
 
   //components indicate the possible form elements
   const components = {
-    Input: () => <Input onChange={onChange} />,
+    Input: () => <Input type="text" onChange={onChange} />,
+    //Switch and Textarea are not currently supported
     Switch: () => <Switch />,
     Textarea: () => <Textarea />,
     Select: () => (
