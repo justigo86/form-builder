@@ -18,6 +18,8 @@ import FormField from "./FormField";
 import { Button } from "@/components/ui/button";
 import { publishForm } from "../actions/mutateForm";
 import FormPublishSuccess from "./FormPublishSuccess";
+import { submitAnswers, type Answer } from "../actions/submitAnswers";
+import { useRouter } from "next/navigation";
 
 type Props = {
   form: Form;
@@ -38,6 +40,7 @@ interface Form extends FormSelectModel {
 
 const Form = (props: Props) => {
   const form = useForm();
+  const router = useRouter();
   const { editMode } = props;
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
 
@@ -52,7 +55,8 @@ const Form = (props: Props) => {
       await publishForm(props.form.id);
       setSuccessDialogOpen(true);
     } else {
-      let answers = [];
+      //defined type Answer in submitAnswers to help align response types to submitAnswers()
+      let answers: Answer[] = [];
       for (const [questionId, value] of Object.entries(data)) {
         const id = parseInt(questionId.replace("question-", ""));
         let fieldOptionsId = null;
@@ -60,7 +64,7 @@ const Form = (props: Props) => {
         if (typeof value == "string" && value.includes("answerId_")) {
           fieldOptionsId = parseInt(value.replace("answerId_", ""));
         } else {
-          textValue = value;
+          textValue = value as string;
         }
         answers.push({
           questionId: id,
@@ -68,6 +72,18 @@ const Form = (props: Props) => {
           //using value because it is a field in the answers schema
           value: textValue,
         });
+      }
+      try {
+        const response = await submitAnswers({
+          formId: props.form.id,
+          answers,
+        });
+        if (response) {
+          router.push("/forms/submit-success");
+        }
+      } catch (err) {
+        console.log(err);
+        alert("Error occurred while submitting this form.");
       }
     }
   };
