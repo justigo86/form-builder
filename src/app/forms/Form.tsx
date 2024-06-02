@@ -72,19 +72,42 @@ const Form = (props: Props) => {
           //using value because it is a field in the answers schema
           value: textValue,
         });
-      }
-      try {
-        const response = await submitAnswers({
-          formId: props.form.id,
-          answers,
+
+        //fetching answers response data through /form/new api route
+        //do not want to hard-code localhost url for fetch
+        const baseUrl =
+          process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+        const response = await fetch(`${baseUrl}/api/form/new`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            formId: props.form.id,
+            answers,
+          }),
         });
-        if (response) {
+        if (response.status === 200) {
           router.push("/forms/submit-success");
+        } else {
+          console.error("Error submitting form.");
+          alert("Error submitting form.");
         }
-      } catch (err) {
-        console.log(err);
-        alert("Error occurred while submitting this form.");
       }
+
+      // //initially used /actions/submitAnswers function
+      // try {
+      //   const response = await submitAnswers({
+      //     formId: props.form.id,
+      //     answers,
+      //   });
+      //   if (response) {
+      //     router.push("/forms/submit-success");
+      //   }
+      // } catch (err) {
+      //   console.log(err);
+      //   alert("Error occurred while submitting this form.");
+      // }
     }
   };
 

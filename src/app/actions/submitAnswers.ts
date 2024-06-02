@@ -47,5 +47,6 @@ export async function submitAnswers(data: SubmitAnswersData) {
     return insertedId;
   } catch (err) {
     console.log(err);
+    return null;
   }
 }
