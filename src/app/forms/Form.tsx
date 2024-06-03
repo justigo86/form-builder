@@ -88,7 +88,7 @@ const Form = (props: Props) => {
           }),
         });
         if (response.status === 200) {
-          router.push("/forms/submit-success");
+          router.push(`/forms/%{props.form.id}/success`);
         } else {
           console.error("Error submitting form.");
           alert("Error submitting form.");
