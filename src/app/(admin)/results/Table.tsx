@@ -1,6 +1,13 @@
 "use client";
-
 import * as React from "react";
+import { InferSelectModel } from "drizzle-orm";
+import {
+  forms,
+  answers,
+  formSubmissions,
+  questions,
+  fieldOptions,
+} from "@/db/schema";
 
 import {
   createColumnHelper,
@@ -9,76 +16,61 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-type Person = {
-  firstName: string;
-  lastName: string;
-  age: number;
-  visits: number;
-  status: string;
-  progress: number;
+type FieldOption = InferSelectModel<typeof fieldOptions>;
+
+type Answer = InferSelectModel<typeof answers> & {
+  fieldOption?: FieldOption | null;
 };
 
-const defaultData: Person[] = [
-  {
-    firstName: "tanner",
-    lastName: "linsley",
-    age: 24,
-    visits: 100,
-    status: "In Relationship",
-    progress: 50,
-  },
-  {
-    firstName: "tandy",
-    lastName: "miller",
-    age: 40,
-    visits: 40,
-    status: "Single",
-    progress: 80,
-  },
-  {
-    firstName: "joe",
-    lastName: "dirte",
-    age: 45,
-    visits: 20,
-    status: "Complicated",
-    progress: 10,
-  },
-];
+type Question = InferSelectModel<typeof questions> & {
+  fieldOptions: FieldOption[];
+  answers: Answer[];
+};
 
-const columnHelper = createColumnHelper<Person>();
+type FormSubmission = InferSelectModel<typeof formSubmissions> & {
+  answers: Answer[];
+};
 
-const columns = [
-  columnHelper.accessor("firstName", {
-    cell: (info) => info.getValue(),
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor((row) => row.lastName, {
-    id: "lastName",
-    cell: (info) => <i>{info.getValue()}</i>,
-    header: () => <span>Last Name</span>,
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor("age", {
-    header: () => "Age",
-    cell: (info) => info.renderValue(),
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor("visits", {
-    header: () => <span>Visits</span>,
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor("status", {
-    header: "Status",
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor("progress", {
-    header: "Profile Progress",
-    footer: (info) => info.column.id,
-  }),
-];
+export type Form =
+  | (InferSelectModel<typeof forms> & {
+      questions: Question[];
+      submissions: FormSubmission[];
+    })
+  | undefined;
 
-const Table = () => {
-  const [data, _setData] = React.useState(() => [...defaultData]);
+interface TableProps {
+  data: FormSubmission[];
+  questions: Question[];
+}
+
+// const columnHelper = createColumnHelper<Question>();
+const columnHelper = createColumnHelper<FormSubmission>();
+
+export function Table(props: TableProps) {
+  const { data } = props;
+  const columns = [
+    columnHelper.accessor("id", {
+      cell: (info) => info.getValue(),
+    }),
+    ...props.questions.map((question: Question, index: number) => {
+      return columnHelper.accessor(
+        (row) => {
+          let answer = row.answers.find((answer: Answer) => {
+            return answer.questionId === question.id;
+          });
+          if (!answer) {
+            return "";
+          }
+          return answer.fieldOption ? answer.fieldOption.text : answer.value;
+        },
+        {
+          header: () => question.text,
+          id: question.id.toString(),
+          cell: (info) => info.renderValue(),
+        }
+      );
+    }),
+  ];
 
   const table = useReactTable({
     data,
@@ -87,38 +79,38 @@ const Table = () => {
   });
 
   return (
-    <div className="p-2">
-      <table>
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="p-2 mt-4">
+      <div className="shadow overflow-hidden border border-gray-200 sm:rounded-lg">
+        <table>
+          <thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id} className="border-b">
+                {headerGroup.headers.map((header) => (
+                  <th key={header.id} className="text-left p-3">
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {table.getRowModel().rows.map((row) => (
+              <tr key={row.id} className="py-2">
+                {row.getVisibleCells().map((cell) => (
+                  <td key={cell.id} className="p-3">
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
-};
-
-export default Table;
+}

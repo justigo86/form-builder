@@ -2,19 +2,20 @@ import { db } from "@/db";
 import { forms } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import React from "react";
-import Table from "./results/Table";
+import { Table } from "./results/Table";
 
 type Props = {
   formId: number;
 };
 
 const ResultsDisplay = async ({ formId }: Props) => {
-  const results = await db.query.forms.findFirst({
+  const form = await db.query.forms.findFirst({
     where: eq(forms.id, formId),
     with: {
       questions: {
         with: {
           fieldOptions: true,
+          answers: true,
         },
       },
       submissions: {
@@ -29,13 +30,17 @@ const ResultsDisplay = async ({ formId }: Props) => {
     },
   });
 
-  if (!results) {
+  if (!form) {
     return null;
+  }
+
+  if (!form.submissions) {
+    return <p>No submissions for this form.</p>;
   }
 
   return (
     <div>
-      <Table />
+      <Table data={form.submissions} questions={form.questions} />
     </div>
   );
 };
