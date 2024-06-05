@@ -54,6 +54,7 @@ export default function AdminLayount({
               <FormGenerator />
             </SessionProvider>
           </header>
+          <hr className="my-4" />
           {children}
         </main>
       </div>

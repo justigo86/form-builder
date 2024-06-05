@@ -27,7 +27,7 @@ const page = async ({
 
   return (
     <div>
-      Results: <FormsPicker options={selectOptions} />
+      <FormsPicker options={selectOptions} />
       {/* formId value has to be accessed via props bc server component
       and done with searchParams functionality*/}
       <ResultsDisplay
