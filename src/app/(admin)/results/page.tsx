@@ -3,7 +3,7 @@ import { forms } from "@/db/schema";
 import { InferSelectModel } from "drizzle-orm";
 import React from "react";
 import FormsPicker from "./FormsPicker";
-import ResultsDisplay from "../ResultsDisplay";
+import ResultsDisplay from "./ResultsDisplay";
 
 type Props = {};
 

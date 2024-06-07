@@ -2,7 +2,7 @@ import { db } from "@/db";
 import { forms } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import React from "react";
-import { Table } from "./results/Table";
+import { Table } from "./Table";
 
 type Props = {
   formId: number;
