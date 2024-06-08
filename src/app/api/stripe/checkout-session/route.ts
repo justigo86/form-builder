@@ -8,7 +8,7 @@ export async function POST(req: Request) {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
   //from Stripe docs for checkout-session
-  // const stripe = require('stripe')('sk_test_51NBrJMEkrG2xbBb087Fr3LymDIaIxDCtNUqOrGvA0CMwJ0NehIMESFmmCsnsE1WZJYEsWt0XSNTOecQ4SrFmVzNN00ycVzhGPJ');
+  // const stripe = require('stripe')([key]);
   const session = await stripe.checkout.sessions.create({
     success_url: `${baseUrl}/payment/success`,
     customer: userId,
