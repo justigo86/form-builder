@@ -4,6 +4,7 @@ import React from "react";
 import ProgressBar from "../progressBar";
 import SubscribeBtn from "@/app/subscription/SubscribeBtn";
 import { auth } from "@/auth";
+import { env } from "process";
 
 //upgrade button and account information for sidebar
 const UpgradeAcctBtn = async () => {
@@ -20,7 +21,11 @@ const UpgradeAcctBtn = async () => {
         {formCount} out of {MAX_FREE_FORMS} forms generated
       </p>
       <p>
-        <SubscribeBtn userId={userId} price={20} /> for unlimited forms.
+        <SubscribeBtn
+          userId={userId}
+          price={process.env.STRIPE_PRICE_API_KEY!}
+        />{" "}
+        for unlimited forms.
       </p>
     </div>
   );

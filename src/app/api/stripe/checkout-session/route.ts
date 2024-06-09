@@ -6,12 +6,13 @@ export async function POST(req: Request) {
   const userSession = await auth();
   const userId = userSession?.user?.id;
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+  const userEmail = userSession?.user?.email;
 
   //from Stripe docs for checkout-session
   // const stripe = require('stripe')([key]);
   const session = await stripe.checkout.sessions.create({
     success_url: `${baseUrl}/payment/success`,
-    customer: userId,
+    // customer: userId,
     payment_method_types: ["card"],
     line_items: [
       {
@@ -19,7 +20,7 @@ export async function POST(req: Request) {
         quantity,
       },
     ],
-    mode: "payment",
+    mode: "subscription",
   });
 
   if (session) {

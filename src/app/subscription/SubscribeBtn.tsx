@@ -5,13 +5,13 @@ import React from "react";
 
 type Props = {
   userId?: string;
-  price: number;
+  price: string;
 };
 
 const SubscribeBtn = ({ userId, price }: Props) => {
   const router = useRouter();
 
-  const handleCheckout = async (price: number) => {
+  const handleCheckout = async (price: string) => {
     if (!userId) {
       router.push("/login");
     }
