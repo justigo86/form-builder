@@ -3,14 +3,13 @@ import { db } from "@/db";
 import { users } from "@/db/schema";
 import { stripe } from "@/lib/stripe";
 import { eq } from "drizzle-orm";
-import Stripe from "stripe";
 
 export async function POST(req: Request) {
   const { price, quantity = 1 } = await req.json();
   const userSession = await auth();
   const userId = userSession?.user?.id;
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-  const userEmail = userSession?.user?.email;
+  // const userEmail = userSession?.user?.email;
 
   if (!userId) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
