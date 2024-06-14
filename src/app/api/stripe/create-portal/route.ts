@@ -4,7 +4,7 @@ import { users } from "@/db/schema";
 import { stripe } from "@/lib/stripe";
 import { eq } from "drizzle-orm";
 
-export async function POST(req: Request) {
+export async function POST() {
   const session = await auth();
   const userId = session?.user?.id;
 
@@ -38,15 +38,15 @@ export async function POST(req: Request) {
     };
     const response = await stripe.customers.create(customerData);
     customer = { id: response.id };
-    //use response to create a Stripe customer "portal session"
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-    const url = await stripe.billingPortal.sessions.create({
-      customer: customer.id,
-      return_url: `${baseUrl}/settings`,
-    });
-
-    return new Response(JSON.stringify({ url }), {
-      status: 200,
-    });
   }
+  //use response to create a Stripe customer "portal session"
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+  const url = await stripe.billingPortal.sessions.create({
+    customer: customer.id,
+    return_url: `${baseUrl}/settings`,
+  });
+
+  return new Response(JSON.stringify({ url }), {
+    status: 200,
+  });
 }
