@@ -17,7 +17,7 @@ export async function POST(req: Request) {
   const sig = req.headers.get("Stripe-Signature") as string;
   const body = await req.text();
 
-  if (!process.env.STRIPE_WEBHOOK_SECRET) {
+  if (!process.env.STRIPE_LOCAL_WEBHOOK_SECRET) {
     throw new Error("STRIPE_WEBHOOK_SECRET is not set");
   }
   if (!sig) {
@@ -28,23 +28,24 @@ export async function POST(req: Request) {
     // await req.text(),
     body,
     sig,
-    process.env.STRIPE_WEBHOOK_SECRET
+    process.env.STRIPE_LOCAL_WEBHOOK_SECRET
   );
 
   const data = event.data.object as Stripe.Subscription;
+  console.log(data);
 
   //switch cases for customer events
   if (!relevantEvents.has(event.type)) {
     switch (event.type) {
       case "customer.subscription.created": {
         await createSubscription({
-          userId: data.customer as string,
+          stripeCustomerId: data.customer as string,
         });
         break;
       }
       case "customer.subscription.deleted": {
         await deleteSubscription({
-          userId: data.customer as string,
+          stripeCustomerId: data.customer as string,
         });
         break;
       }
