@@ -7,11 +7,11 @@ export async function createSubscription({
 }: {
   stripeCustomerId: string;
 }) {
-  console.log("Creating subscription");
+  // console.log("Creating subscription");
   await db
     .update(users)
     .set({ subscribed: true })
-    .where(eq(users.id, stripeCustomerId));
+    .where(eq(users.stripeCustomerId, stripeCustomerId));
 }
 
 export async function deleteSubscription({
@@ -19,9 +19,9 @@ export async function deleteSubscription({
 }: {
   stripeCustomerId: string;
 }) {
-  console.log("Deleting subscription");
+  // console.log("Deleting subscription");
   await db
     .update(users)
     .set({ subscribed: false })
-    .where(eq(users.id, stripeCustomerId));
+    .where(eq(users.stripeCustomerId, stripeCustomerId));
 }

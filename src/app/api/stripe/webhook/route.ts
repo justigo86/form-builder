@@ -18,6 +18,7 @@ export async function POST(req: Request) {
   const body = await req.text();
 
   if (!process.env.STRIPE_LOCAL_WEBHOOK_SECRET) {
+    // if (!process.env.STRIPE_WEBHOOK_SECRET) {
     throw new Error("STRIPE_WEBHOOK_SECRET is not set");
   }
   if (!sig) {
@@ -29,10 +30,12 @@ export async function POST(req: Request) {
     body,
     sig,
     process.env.STRIPE_LOCAL_WEBHOOK_SECRET
+    // process.env.STRIPE_WEBHOOK_SECRET
   );
 
   const data = event.data.object as Stripe.Subscription;
-  console.log(data);
+  // console.log(data);
+  // console.log(event.type);
 
   //switch cases for customer events
   if (!relevantEvents.has(event.type)) {
