@@ -35,10 +35,10 @@ export async function POST(req: Request) {
 
   const data = event.data.object as Stripe.Subscription;
   // console.log(data);
-  // console.log(event.type);
+  console.log(event.type);
 
   //switch cases for customer events
-  if (!relevantEvents.has(event.type)) {
+  if (relevantEvents.has(event.type)) {
     switch (event.type) {
       case "customer.subscription.created": {
         await createSubscription({
