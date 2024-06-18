@@ -25,7 +25,7 @@ const SubscribeBtn = ({ userId, price }: Props) => {
         body: JSON.stringify({ price }),
       }).then((res) => res.json());
 
-      console.log("sessionId:", sessionId);
+      // console.log("sessionId:", sessionId);
       const stripe = await getStripe();
       stripe?.redirectToCheckout({ sessionId });
     } catch (err) {
