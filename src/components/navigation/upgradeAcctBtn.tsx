@@ -14,7 +14,7 @@ const UpgradeAcctBtn = async () => {
   const percent = (formCount / MAX_FREE_FORMS) * 100;
   const userId = session?.user?.id;
 
-  //if the user is subscribed or does not have an ID, do not show button
+  //if the user is subscribed or is not signed in, do not show button
   if (!userId) {
     return null;
   }

@@ -15,6 +15,7 @@ import { generateForm } from "@/actions/generateForm";
 import { useFormState, useFormStatus } from "react-dom";
 import { useSession, signIn } from "next-auth/react";
 import { navigate } from "../actions/navigateToForm";
+import { Plus } from "lucide-react";
 
 type Props = {};
 
@@ -39,7 +40,6 @@ const FormGenerator = (props: Props) => {
   const [state, formAction] = useFormState(generateForm, initialState);
   const [open, setOpen] = useState(false);
   const session = useSession();
-  console.log(session);
 
   //when state.message changes, check for success to close dialog
   useEffect(() => {
@@ -59,7 +59,10 @@ const FormGenerator = (props: Props) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <Button onClick={onFormCreate}>Create Form</Button>
+      <Button onClick={onFormCreate}>
+        <Plus className="w-4 h-4 mr-2" />
+        Create Form
+      </Button>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Create New Form</DialogTitle>
