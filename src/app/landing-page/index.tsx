@@ -29,7 +29,7 @@ const LandingPage = (props: Props) => {
         <h2 className="text-3xl font-bold text-center tracking-tighter sm:text-4xl md:text-5xl leading-6">
           How It Works
         </h2>
-        <ul className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full max-w-5xl text-center">
+        <ul className="flex flex-col gap-4 lg:grid lg:grid-cols-3 w-full max-w-5xl text-center">
           <li className="flex flex-col items-center space-y-4 relative">
             {/* Insert images of end product
             <Image
