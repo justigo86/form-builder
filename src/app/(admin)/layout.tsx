@@ -50,7 +50,7 @@ export default function AdminLayount({
           <UpgradeAcctBtn />
         </aside>
         <main className="flex w-full flex-col overflow-hidden">
-          <header className="flex items-center">
+          <header className="flex flex-col md:flex-row items-center">
             <h1 className="text-4xl m-5 p-4 font-semibold">Dashboard</h1>
             <SessionProvider>
               <FormGenerator />
