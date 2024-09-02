@@ -64,8 +64,8 @@ const ResultsDisplay = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [submissions, setSubmissions] = useState<FormSubmission[]>([]);
 
-  useEffect(() => {
-    const form = async () => {
+  const form = async () => {
+    try {
       const userForms: Array<InferSelectModel<typeof forms>> =
         await getUserForms();
 
@@ -73,34 +73,43 @@ const ResultsDisplay = () => {
         return <div>No forms found</div>;
       }
 
-      // const selectOptions = userForms.map((form) => {
-      //   return { value: form.id, label: form.name };
-      // });
+      const selectOptions = userForms.map((form) => {
+        return { value: form.id, label: form.name };
+      });
+      setSelectOptions(selectOptions);
+    } catch (error) {
+      console.log("Unable to fetch form data.", error);
+    }
+  };
 
-      // await db.query.forms.findFirst({
-      //   where: eq(forms.id, formId),
-      //   with: {
-      //     questions: {
-      //       with: {
-      //         fieldOptions: true,
-      //         answers: true,
-      //       },
-      //     },
-      //     submissions: {
-      //       with: {
-      //         answers: {
-      //           with: {
-      //             fieldOption: true,
-      //           },
-      //         },
-      //       },
-      //     },
-      //   },
-      // });
-    };
-
+  useEffect(() => {
     form();
   }, []);
+
+  // const selectOptions = userForms.map((form) => {
+  //   return { value: form.id, label: form.name };
+  // });
+
+  // await db.query.forms.findFirst({
+  //   where: eq(forms.id, formId),
+  //   with: {
+  //     questions: {
+  //       with: {
+  //         fieldOptions: true,
+  //         answers: true,
+  //       },
+  //     },
+  //     submissions: {
+  //       with: {
+  //         answers: {
+  //           with: {
+  //             fieldOption: true,
+  //           },
+  //         },
+  //       },
+  //     },
+  //   },
+  // });
 
   // if (!form) {
   //   return null;
@@ -112,7 +121,12 @@ const ResultsDisplay = () => {
 
   return (
     <div>
-      <FormsPicker options={selectOptions} />
+      <FormsPicker
+        options={selectOptions}
+        setData={setData}
+        setQuestions={setQuestions}
+        setSubmissions={setSubmissions}
+      />
       <ResultsTable
         data={data}
         questions={questions}
