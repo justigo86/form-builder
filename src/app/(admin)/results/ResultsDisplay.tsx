@@ -2,7 +2,7 @@ import { db } from "@/db";
 import { forms } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import React from "react";
-import { Table } from "./Table";
+import { ResultsTable } from "./Table";
 
 type Props = {
   formId: number;
@@ -40,7 +40,11 @@ const ResultsDisplay = async ({ formId }: Props) => {
 
   return (
     <div>
-      <Table data={form.submissions} questions={form.questions} />
+      <ResultsTable
+        data={form.submissions}
+        questions={form.questions}
+        submissions={form.submissions}
+      />
     </div>
   );
 };

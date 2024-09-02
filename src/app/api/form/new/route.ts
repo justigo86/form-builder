@@ -4,7 +4,7 @@ import { formSubmissions, answers as dbAnsewrs } from "@/db/schema";
 //defining api route for new form
 export async function POST(request: Request): Promise<Response> {
   const data = await request.json();
-  console.log(data);
+  // console.log(data);
   const newFormSubmission = await db
     .insert(formSubmissions)
     .values({

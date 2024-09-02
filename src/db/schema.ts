@@ -1,4 +1,4 @@
-import { subscribe } from "diagnostics_channel";
+// import { subscribe } from "diagnostics_channel";
 import { relations } from "drizzle-orm";
 import {
   timestamp,
@@ -92,6 +92,8 @@ export const forms = pgTable("forms", {
   description: text("description"),
   userId: text("user_Id"),
   published: boolean("published"),
+  // formId: text("form_id"),
+  // userPrompt: text("user_prompt"),
 });
 //define how the tables are related - many forms to one user
 export const formsRelations = relations(forms, ({ many, one }) => ({
@@ -109,6 +111,7 @@ export const questions = pgTable("questions", {
   fieldType: formElements("field_type"),
   formId: integer("form_id"),
 });
+
 export const questionsRelations = relations(questions, ({ one, many }) => ({
   form: one(forms, {
     fields: [questions.formId],
@@ -124,6 +127,7 @@ export const fieldOptions = pgTable("field_options", {
   value: text("value"),
   questionId: integer("question_id"),
 });
+
 export const fieldOptionsRelations = relations(fieldOptions, ({ one }) => ({
   question: one(questions, {
     fields: [fieldOptions.questionId],

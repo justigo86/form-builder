@@ -44,7 +44,7 @@ const Form = (props: Props) => {
   const { editMode } = props;
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
 
-  console.log(editMode);
+  // console.log(editMode);
 
   const handleDialogChange = (open: boolean) => {
     //update successDialogOpen

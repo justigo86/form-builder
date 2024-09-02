@@ -16,6 +16,15 @@ import {
   formSubmissions,
   questions,
 } from "@/db/schema";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 type FieldOption = InferSelectModel<typeof fieldOptions>;
 
@@ -25,7 +34,7 @@ type Answer = InferSelectModel<typeof answers> & {
 
 type Question = InferSelectModel<typeof questions> & {
   fieldOptions: FieldOption[];
-  answers: Answer[];
+  // answers: Answer[];
 };
 
 type FormSubmission = InferSelectModel<typeof formSubmissions> & {
@@ -42,83 +51,107 @@ export type Form =
 interface TableProps {
   data: FormSubmission[];
   questions: Question[];
+  submissions: FormSubmission[];
 }
 
-// const columnHelper = createColumnHelper<any>();
-// const columnHelper = createColumnHelper<Question>();
-const columnHelper = createColumnHelper<FormSubmission>();
+// const columnHelper = createColumnHelper<FormSubmission>();
 
-export function Table(props: TableProps) {
-  const { data } = props;
+export function ResultsTable(props: TableProps) {
+  const { data, questions, submissions } = props;
+  console.log("submissions: ", submissions);
+  // console.log(data);
 
-  const columns = [
-    columnHelper.accessor("id", {
-      cell: (info) => info.getValue(),
-    }),
-    //mapping props allows us to have flexible table columns
-    ...props.questions.map((question: Question, index: number) => {
-      return columnHelper.accessor(
-        (row) => {
-          let answer = row.answers.find(
-            (answer: Answer) => answer.questionId === question.id
-          );
-          if (!answer) return "";
-          return answer.fieldOption ? answer.fieldOption.text : answer.value;
-        },
-        {
-          header: () => question.text,
-          id: question.id.toString(),
-          cell: (info) => info.renderValue(),
-        }
-      );
-    }),
-    // columnHelper.accessor((row) => row.lastName, {
-    //   id: "lastName",
-    //   cell: (info) => <i>{info.getValue()}</i>,
-    //   header: () => <span>Last Name</span>,
-    //   footer: (info) => info.column.id,
-    // }),
-  ];
+  // const columns = [
+  //   columnHelper.accessor("id", {
+  //     cell: (info) => info.getValue(),
+  //   }),
+  //mapping props allows us to have flexible table columns
+  //   ...props.questions.map((question: Question, index: number) => {
+  //     return columnHelper.accessor(
+  //       (row) => {
+  //         let answer = row.answers.find(
+  //           (answer: Answer) => answer.questionId === question.id
+  //         );
+  //         if (!answer) return "";
+  //         return answer.fieldOption ? answer.fieldOption.text : answer.value;
+  //       },
+  //       {
+  //         header: () => question.text,
+  //         id: question.id.toString(),
+  //         cell: (info) => info.renderValue(),
+  //       }
+  //     );
+  //   }),
+  // ];
 
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
+  // const table = useReactTable({
+  //   data,
+  //   columns,
+  //   getCoreRowModel: getCoreRowModel(),
+  // });
 
   return (
-    <div className="p-2 mt-4">
-      <div className="shadow overflow-hidden border border-gray-200 sm:rounded-lg">
-        <table>
-          <thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id} className="border-b">
-                {headerGroup.headers.map((header) => (
-                  <th key={header.id} className="text-left p-3">
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </th>
+    <div>
+      {data && questions && (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>ID</TableHead>
+              {questions.map((question) => (
+                <TableHead key={question.id}>{question.text}</TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {(submissions || []).map((submission, index) => (
+              <TableRow key={index}>
+                <TableCell>{index + 1}</TableCell>
+                {submission.answers.map((answer, i) => (
+                  <TableCell key={i}>
+                    {answer.value == null
+                      ? answer?.fieldOption?.text
+                      : answer.value}
+                  </TableCell>
                 ))}
-              </tr>
+              </TableRow>
             ))}
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {table.getRowModel().rows.map((row) => (
-              <tr key={row.id} className="py-2">
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id} className="p-3">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          </TableBody>
+        </Table>
+      )}
     </div>
+
+    // <div className="p-2 mt-4">
+    //   <div className="shadow overflow-hidden border border-gray-200 sm:rounded-lg">
+    //     <table>
+    //       <thead>
+    //         {table.getHeaderGroups().map((headerGroup) => (
+    //           <tr key={headerGroup.id} className="border-b">
+    //             {headerGroup.headers.map((header) => (
+    //               <th key={header.id} className="text-left p-3">
+    //                 {header.isPlaceholder
+    //                   ? null
+    //                   : flexRender(
+    //                       header.column.columnDef.header,
+    //                       header.getContext()
+    //                     )}
+    //               </th>
+    //             ))}
+    //           </tr>
+    //         ))}
+    //       </thead>
+    //       <tbody className="divide-y divide-gray-200">
+    //         {table.getRowModel().rows.map((row) => (
+    //           <tr key={row.id} className="py-2">
+    //             {row.getVisibleCells().map((cell) => (
+    //               <td key={cell.id} className="p-3">
+    //                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
+    //               </td>
+    //             ))}
+    //           </tr>
+    //         ))}
+    //       </tbody>
+    //     </table>
+    //   </div>
+    // </div>
   );
 }
