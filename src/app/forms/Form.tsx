@@ -44,13 +44,14 @@ const Form = (props: Props) => {
   const { editMode } = props;
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
 
+  console.log(editMode);
+
   const handleDialogChange = (open: boolean) => {
     //update successDialogOpen
     setSuccessDialogOpen(open);
   };
 
   const onSubmit = async (data: any) => {
-    console.log(data);
     if (editMode) {
       await publishForm(props.form.id);
       setSuccessDialogOpen(true);
@@ -121,8 +122,11 @@ const Form = (props: Props) => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="grid w-full max-w-3xl items-center gap-6 my-4"
         >
-          {props.form.questions.map(
-            (question: QuestionWithOptionsModel, index: number) => {
+          {props.form.questions
+            // .sort((a, b) => {
+            //   return a - b;
+            // })
+            .map((question: QuestionWithOptionsModel, index: number) => {
               return (
                 <ShadCNFormField
                   control={form.control}
@@ -145,8 +149,7 @@ const Form = (props: Props) => {
                   )}
                 />
               );
-            }
-          )}
+            })}
           <Button type="submit">{editMode ? "Publish" : "Submit"}</Button>
         </form>
       </ShadCNForm>

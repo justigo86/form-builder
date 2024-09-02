@@ -32,8 +32,8 @@ const page = async ({
       and done with searchParams functionality*/}
       <ResultsDisplay
         formId={
-          searchParams?.id
-            ? parseInt(searchParams.id as string)
+          searchParams?.formId
+            ? parseInt(searchParams.formId as string)
             : userForms[0].id
         }
       />
