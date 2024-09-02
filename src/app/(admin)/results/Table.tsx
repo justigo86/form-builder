@@ -2,12 +2,12 @@
 //initial table template taken from Tanstack docs for React basic example
 
 import * as React from "react";
-import {
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+// import {
+//   createColumnHelper,
+//   flexRender,
+//   getCoreRowModel,
+//   useReactTable,
+// } from "@tanstack/react-table";
 import { InferSelectModel } from "drizzle-orm";
 import {
   answers,
@@ -19,7 +19,7 @@ import {
 import {
   Table,
   TableBody,
-  TableCaption,
+  // TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -48,8 +48,13 @@ export type Form =
     })
   | undefined;
 
-interface TableProps {
+interface DataProps {
   data: FormSubmission[];
+  questions: Question[];
+}
+
+interface TableProps {
+  data: DataProps | null;
   questions: Question[];
   submissions: FormSubmission[];
 }

@@ -1,49 +1,122 @@
-import { db } from "@/db";
-import { forms } from "@/db/schema";
-import { eq } from "drizzle-orm";
-import React from "react";
-import { ResultsTable } from "./Table";
+"use client";
 
-type Props = {
-  formId: number;
+import { db } from "@/db";
+import { eq } from "drizzle-orm";
+import React, { useEffect, useState } from "react";
+import { ResultsTable } from "./Table";
+import FormsPicker from "./FormsPicker";
+import { InferSelectModel } from "drizzle-orm";
+import { getUserForms } from "@/app/actions/getUserForms";
+import {
+  answers,
+  fieldOptions,
+  forms,
+  formSubmissions,
+  questions,
+} from "@/db/schema";
+
+// type Props = {
+//   formId: number;
+// };
+
+type FieldOption = InferSelectModel<typeof fieldOptions>;
+
+type Answer = InferSelectModel<typeof answers> & {
+  fieldOption?: FieldOption | null;
 };
 
-const ResultsDisplay = async ({ formId }: Props) => {
-  const form = await db.query.forms.findFirst({
-    where: eq(forms.id, formId),
-    with: {
-      questions: {
-        with: {
-          fieldOptions: true,
-          answers: true,
-        },
-      },
-      submissions: {
-        with: {
-          answers: {
-            with: {
-              fieldOption: true,
-            },
-          },
-        },
-      },
-    },
-  });
+type Question = InferSelectModel<typeof questions> & {
+  fieldOptions: FieldOption[];
+  // answers: Answer[];
+};
 
-  if (!form) {
-    return null;
-  }
+type FormSubmission = InferSelectModel<typeof formSubmissions> & {
+  answers: Answer[];
+};
 
-  if (!form.submissions) {
-    return <p>No submissions for this form.</p>;
-  }
+export type Form =
+  | (InferSelectModel<typeof forms> & {
+      questions: Question[];
+      submissions: FormSubmission[];
+    })
+  | undefined;
+
+interface DataProps {
+  data: FormSubmission[];
+  questions: Question[];
+}
+
+interface TableProps {
+  data: DataProps;
+  questions: Question[];
+  submissions: FormSubmission[];
+}
+
+// const ResultsDisplay = ({ formId }: Props) => {
+const ResultsDisplay = () => {
+  const [selectOptions, setSelectOptions] = useState<
+    {
+      value: number;
+      label: string;
+    }[]
+  >([]);
+  const [data, setData] = useState<DataProps | null>(null);
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [submissions, setSubmissions] = useState<FormSubmission[]>([]);
+
+  useEffect(() => {
+    const form = async () => {
+      const userForms: Array<InferSelectModel<typeof forms>> =
+        await getUserForms();
+
+      if (!userForms?.length || userForms.length === 0) {
+        return <div>No forms found</div>;
+      }
+
+      // const selectOptions = userForms.map((form) => {
+      //   return { value: form.id, label: form.name };
+      // });
+
+      // await db.query.forms.findFirst({
+      //   where: eq(forms.id, formId),
+      //   with: {
+      //     questions: {
+      //       with: {
+      //         fieldOptions: true,
+      //         answers: true,
+      //       },
+      //     },
+      //     submissions: {
+      //       with: {
+      //         answers: {
+      //           with: {
+      //             fieldOption: true,
+      //           },
+      //         },
+      //       },
+      //     },
+      //   },
+      // });
+    };
+
+    form();
+  }, []);
+
+  // if (!form) {
+  //   return null;
+  // }
+
+  // if (!form.submissions) {
+  //   return <p>No submissions for this form.</p>;
+  // }
 
   return (
     <div>
+      <FormsPicker options={selectOptions} />
       <ResultsTable
-        data={form.submissions}
-        questions={form.questions}
-        submissions={form.submissions}
+        data={data}
+        questions={questions}
+        submissions={submissions}
       />
     </div>
   );
