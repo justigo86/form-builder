@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import {
   Select,
   SelectContent,
@@ -18,7 +18,9 @@ import {
   formSubmissions,
   questions,
 } from "@/db/schema";
-import { InferSelectModel } from "drizzle-orm";
+import { eq, InferSelectModel } from "drizzle-orm";
+import { db } from "@/db";
+import { getUserSubmissions } from "@/app/actions/getUserSubmissions";
 
 type FieldOption = InferSelectModel<typeof fieldOptions>;
 
@@ -43,7 +45,7 @@ export type Form =
   | undefined;
 
 interface DataProps {
-  data: FormSubmission[];
+  submissions: FormSubmission[];
   questions: Question[];
 }
 
@@ -82,9 +84,28 @@ const FormsPicker = (props: Props) => {
     [searchParams]
   );
 
-  const fetchFormData = async () => {
-    // need to fetch data and set states
+  const fetchFormData = async (formId: number) => {
+    try {
+      // need to fetch data and set states
+      const userSubmissions = await getUserSubmissions(formId);
+
+      if (userSubmissions) {
+        const formsData: DataProps = {
+          submissions: userSubmissions.submissions,
+          questions: userSubmissions.questions,
+        };
+        setSubmissions(formsData.submissions);
+        setQuestions(formsData.questions);
+        setData(formsData);
+      }
+    } catch (error) {
+      console.log("Unable to fetch form data.", error);
+    }
   };
+
+  useEffect(() => {
+    fetchFormData(formId as unknown as number);
+  }, [formId]);
 
   return (
     <div className="flex gap-2 items-center">
@@ -96,9 +117,7 @@ const FormsPicker = (props: Props) => {
         }
       >
         <SelectTrigger className="w-[240px]">
-          <SelectValue
-            placeholder={options[0] ? options[0].label : "No forms available"}
-          />
+          <SelectValue placeholder={options[0].label} />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>

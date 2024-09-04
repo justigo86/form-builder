@@ -49,7 +49,7 @@ export type Form =
   | undefined;
 
 interface DataProps {
-  data: FormSubmission[];
+  submissions: FormSubmission[];
   questions: Question[];
 }
 
@@ -63,7 +63,7 @@ interface TableProps {
 
 export function ResultsTable(props: TableProps) {
   const { data, questions, submissions } = props;
-  console.log("submissions: ", submissions);
+  // console.log("submissions: ", submissions);
   // console.log(data);
 
   // const columns = [

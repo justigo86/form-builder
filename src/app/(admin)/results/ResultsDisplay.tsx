@@ -42,7 +42,7 @@ export type Form =
   | undefined;
 
 interface DataProps {
-  data: FormSubmission[];
+  submissions: FormSubmission[];
   questions: Question[];
 }
 
@@ -68,14 +68,15 @@ const ResultsDisplay = () => {
     try {
       const userForms: Array<InferSelectModel<typeof forms>> =
         await getUserForms();
+      // if (!userForms?.length || userForms.length === 0) {
+      //   return <div>No forms found</div>;
+      // }
 
-      if (!userForms?.length || userForms.length === 0) {
-        return <div>No forms found</div>;
-      }
-
-      const selectOptions = userForms.map((form) => {
-        return { value: form.id, label: form.name };
-      });
+      const selectOptions = userForms
+        .filter((form) => form.name !== null)
+        .map((form) => {
+          return { value: form.id, label: form.name };
+        });
       setSelectOptions(selectOptions);
     } catch (error) {
       console.log("Unable to fetch form data.", error);
@@ -121,12 +122,14 @@ const ResultsDisplay = () => {
 
   return (
     <div>
-      <FormsPicker
-        options={selectOptions}
-        setData={setData}
-        setQuestions={setQuestions}
-        setSubmissions={setSubmissions}
-      />
+      {selectOptions.length > 0 && (
+        <FormsPicker
+          options={selectOptions}
+          setData={setData}
+          setQuestions={setQuestions}
+          setSubmissions={setSubmissions}
+        />
+      )}
       <ResultsTable
         data={data}
         questions={questions}
