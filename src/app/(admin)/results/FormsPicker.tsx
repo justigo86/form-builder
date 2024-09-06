@@ -90,6 +90,9 @@ const FormsPicker = (props: Props) => {
       const userSubmissions = await getUserSubmissions(formId);
 
       if (userSubmissions) {
+        if (!userSubmissions.submissions) {
+          return <p>No submissions for this form.</p>;
+        }
         const formsData: DataProps = {
           submissions: userSubmissions.submissions,
           questions: userSubmissions.questions,
@@ -97,6 +100,8 @@ const FormsPicker = (props: Props) => {
         setSubmissions(formsData.submissions);
         setQuestions(formsData.questions);
         setData(formsData);
+      } else {
+        return null;
       }
     } catch (error) {
       console.log("Unable to fetch form data.", error);

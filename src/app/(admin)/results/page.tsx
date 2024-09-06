@@ -44,6 +44,7 @@ import ResultsDisplay from "./ResultsDisplay";
 const page = async () => {
   return (
     <div>
+      <h1 className="text-3xl font-bold my-5">Results</h1>
       <ResultsDisplay />
     </div>
   );

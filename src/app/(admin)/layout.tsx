@@ -1,8 +1,6 @@
 import DashboardNav from "@/components/navigation/navbar";
 import Header from "@/components/ui/header";
 import { SidebarNavItem } from "@/types/nav-types";
-import { SessionProvider } from "next-auth/react";
-import FormGenerator from "../form-generator";
 import UpgradeAcctBtn from "@/components/navigation/upgradeAcctBtn";
 
 export default function AdminLayount({
@@ -49,16 +47,7 @@ export default function AdminLayount({
           <DashboardNav items={dashboardConfig.sidebarNav} />
           <UpgradeAcctBtn />
         </aside>
-        <main className="flex w-full flex-col overflow-hidden">
-          <header className="flex flex-col md:flex-row items-center">
-            <h1 className="text-4xl m-5 p-4 font-semibold">Dashboard</h1>
-            <SessionProvider>
-              <FormGenerator />
-            </SessionProvider>
-          </header>
-          <hr className="my-4" />
-          {children}
-        </main>
+        <main className="flex w-full flex-col overflow-hidden">{children}</main>
       </div>
     </div>
   );

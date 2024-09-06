@@ -21,8 +21,8 @@ const page = async () => {
   const plan = user?.subscribed ? "premium" : "free";
 
   return (
-    <div className="p-4 rounded-md">
-      <h1 className="text-4xl mb-3">Subscription Details</h1>
+    <div>
+      <h1 className="text-3xl font-bold my-5">Subscription Details</h1>
       <p className="mb-3">You are currently on the {plan} plan</p>
       <ManageSubscription />
     </div>
