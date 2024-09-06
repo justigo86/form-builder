@@ -14,7 +14,7 @@ export default function HamburgerMenu() {
   const [open, setOpen] = useState(false);
 
   return (
-    <section className="flex flex-col md:hidden">
+    <section className="flex flex-col">
       <DropdownMenu onOpenChange={() => setOpen((prev) => !prev)}>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-6 w-6 p-0">

@@ -12,7 +12,7 @@ const LandingPage = (props: Props) => {
         className="flex flex-col items-center justify-center space-y-4 pt-4 sm:pt-24 w-full"
         id="hero"
       >
-        <h1 className="text-4xl font-bold text-center tracking-tighter sm:text-5xl md:text-6xl leading-6">
+        <h1 className="text-4xl font-bold text-center tracking-tighter sm:text-5xl md:text-6xl leading-8">
           Create forms fast!
         </h1>
         <p className="max-w-[600px] mt-4 text-center text-gray-500 md:textl-xl">
@@ -31,14 +31,14 @@ const LandingPage = (props: Props) => {
         </h2>
         <ul className="flex flex-col gap-4 lg:grid lg:grid-cols-3 w-full max-w-5xl text-center">
           <li className="flex flex-col items-center space-y-4 relative">
-            {/* Insert images of end product
+            {/* Insert images of end product */}
             <Image
               src=""
-              width="250"
-              height="250"
+              height="180"
+              width="320"
               alt=""
               className="bg-white p-4 shadow-sm border rounded-md"
-            /> */}
+            />
             {/* arrow between images
             <Image src="/arrow.svg"
               width="125"
@@ -48,14 +48,14 @@ const LandingPage = (props: Props) => {
             <p>1. Use prompts to describe the requirements for your form.</p>
           </li>
           <li className="flex flex-col items-center space-y-4 relative">
-            {/* Insert images of end product
+            {/* Insert images of end product */}
             <Image
               src=""
-              width="250"
-              height="250"
+              height="180"
+              width="320"
               alt=""
               className="bg-white p-4 shadow-sm border rounded-md"
-            /> */}
+            />
             {/* arrow between images
             <Image src="/arrow.svg"
               width="125"
@@ -65,14 +65,14 @@ const LandingPage = (props: Props) => {
             <p>2. Generate the form.</p>
           </li>
           <li className="flex flex-col items-center space-y-4 relative">
-            {/* Insert images of end product
+            {/* Insert images of end product*/}
             <Image
               src=""
-              width="250"
-              height="250"
+              height="180"
+              width="320"
               alt=""
               className="bg-white p-4 shadow-sm border rounded-md"
-            /> */}
+            />
             <p>3. Check/update the results, analytics, and more.</p>
           </li>
         </ul>

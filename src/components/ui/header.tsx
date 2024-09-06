@@ -26,8 +26,8 @@ const Header = async () => {
       <nav className="bg-white border-gray-200 px-4 py-2.5">
         <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
           <h1 className="flex items-center gap-2">
-            <HamburgerMenu />
-            AI Form Builder
+            {session?.user && <HamburgerMenu />}
+            <Link href="/">AI Form Builder</Link>
           </h1>
           {session?.user ? (
             <div className="flex items-center gap-4">
