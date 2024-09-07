@@ -18,11 +18,13 @@ type Props = {
 
 const FormsList = (props: Props) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 m-5 p-4 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-3 mt-10 gap-4">
       {props.forms.map((form: Form) => (
         <Card key={form.id} className="max-w-[350px] flex flex-col">
           <CardHeader className="flex-1">
-            <CardTitle>{form.name}</CardTitle>
+            <CardTitle className="overflow-hidden text-ellipsis">
+              {form.name}
+            </CardTitle>
             <CardDescription>{form.description}</CardDescription>
           </CardHeader>
           <CardFooter>

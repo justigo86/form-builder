@@ -1,7 +1,5 @@
 "use client";
 
-import { db } from "@/db";
-import { eq } from "drizzle-orm";
 import React, { useEffect, useState } from "react";
 import { ResultsTable } from "./Table";
 import FormsPicker from "./FormsPicker";

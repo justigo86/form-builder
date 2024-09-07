@@ -18,8 +18,7 @@ import {
   formSubmissions,
   questions,
 } from "@/db/schema";
-import { eq, InferSelectModel } from "drizzle-orm";
-import { db } from "@/db";
+import { InferSelectModel } from "drizzle-orm";
 import { getUserSubmissions } from "@/app/actions/getUserSubmissions";
 
 type FieldOption = InferSelectModel<typeof fieldOptions>;
