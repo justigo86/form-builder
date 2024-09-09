@@ -1,6 +1,6 @@
 "use client";
 
-import { Bar, BarChart } from "recharts";
+import { Bar, BarChart, XAxis } from "recharts";
 import {
   ChartConfig,
   ChartContainer,
@@ -18,6 +18,7 @@ import {
 } from "@/db/schema";
 import { getUserSubmissions } from "@/app/actions/getUserSubmissions";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Button } from "./ui/button";
 
 type FieldOption = InferSelectModel<typeof fieldOptions>;
 
@@ -47,13 +48,13 @@ interface DataProps {
 }
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "hsl(var(--chart-1))",
+  id: {
+    label: "id",
+    color: "#3b82f6",
   },
-  mobile: {
-    label: "Mobile",
-    color: "hsl(var(--chart-2))",
+  questionId: {
+    label: "fieldOption.questionId",
+    color: "#f59e0b",
   },
 } satisfies ChartConfig;
 
@@ -66,7 +67,8 @@ export function FormsBarChart() {
   const fetchFormData = async (formId: number) => {
     try {
       // need to fetch data and set states
-      const userSubmissions = await getUserSubmissions(formId);
+      const userSubmissions = await getUserSubmissions(1);
+      console.log("userSubmissions: ", userSubmissions);
 
       if (userSubmissions) {
         if (!userSubmissions.submissions) {
@@ -89,14 +91,20 @@ export function FormsBarChart() {
 
   useEffect(() => {
     fetchFormData(formId as unknown as number);
-  }, [formId]);
+  }, []);
 
   return (
-    <ChartContainer config={chartConfig}>
-      <BarChart data={data?.submissions}>
-        <Bar dataKey="value" />
-        <ChartTooltip content={<ChartTooltipContent />} />
-      </BarChart>
-    </ChartContainer>
+    // {data.}
+    <div>
+      <ChartContainer config={chartConfig}>
+        <BarChart data={data?.submissions[1].answers}>
+          <XAxis dataKey="fieldOption.value" />
+          <Bar dataKey="fieldOption.id" fill="#3b82f6" />
+          <Bar dataKey="fieldOption.questionId" fill="#f59e0b" />
+          <ChartTooltip content={<ChartTooltipContent />} />
+        </BarChart>
+      </ChartContainer>
+      <Button onClick={() => console.log("FORMSDATA: ", data)}>Click</Button>
+    </div>
   );
 }
