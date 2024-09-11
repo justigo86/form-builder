@@ -29,7 +29,7 @@ type Answer = InferSelectModel<typeof answers> & {
 
 type Question = InferSelectModel<typeof questions> & {
   fieldOptions: FieldOption[];
-  // answers: Answer[];
+  answers: Answer[];
 };
 
 type FormSubmission = InferSelectModel<typeof formSubmissions> & {

@@ -28,7 +28,7 @@ type Answer = InferSelectModel<typeof answers> & {
 
 type Question = InferSelectModel<typeof questions> & {
   fieldOptions: FieldOption[];
-  // answers: Answer[];
+  answers: Answer[];
 };
 
 type FormSubmission = InferSelectModel<typeof formSubmissions> & {
@@ -45,6 +45,14 @@ export type Form =
 interface DataProps {
   submissions: FormSubmission[];
   questions: Question[];
+}
+
+interface AnswerArray {
+  fieldOptionsId: number;
+  formSubmissionId: number;
+  id: number;
+  questionId: number;
+  value: string | null;
 }
 
 const chartConfig = {
@@ -93,18 +101,102 @@ export function FormsBarChart() {
     fetchFormData(formId as unknown as number);
   }, []);
 
+  const fieldOptionsDataSet = (data: DataProps) => {
+    return data?.questions.map((question) => {
+      return question.fieldOptions.map((fieldOption) => {
+        return fieldOption.text;
+      });
+    });
+  };
+
   return (
-    // {data.}
     <div>
-      <ChartContainer config={chartConfig}>
-        <BarChart data={data?.submissions[1].answers}>
-          <XAxis dataKey="fieldOption.value" />
-          <Bar dataKey="fieldOption.id" fill="#3b82f6" />
-          <Bar dataKey="fieldOption.questionId" fill="#f59e0b" />
+      {/* <ChartContainer config={chartConfig}> */}
+      {/* <BarChart data={data?.questions}>
+          {data?.questions.map((question) => {
+            <XAxis dataKey="question.text" />;
+            question.fieldOptions.forEach((fieldOption) => {
+              return (
+                <Bar
+                  key={fieldOption.text}
+                  dataKey="fieldOption.text"
+                  fill="#3b82f6"
+                />
+              );
+            });
+          })}
+          <Bar dataKey="id" fill="#f59e0b" />
           <ChartTooltip content={<ChartTooltipContent />} />
-        </BarChart>
-      </ChartContainer>
-      <Button onClick={() => console.log("FORMSDATA: ", data)}>Click</Button>
+        </BarChart> */}
+
+      {/* <BarChart data={data?.questions}>
+          {data?.questions.map((question) => (
+            <Bar
+              key={question.id}
+              dataKey="answersCount"
+              fill="#3b82f6"
+              stackId="answers"
+            >
+              {question.answers.reduce((acc: number, answer: Answer[]) => {
+                if (answer) {
+                  return (
+                    acc +
+                    answer.filter((field) =>
+                      field.some(
+                        (fieldOption) => fieldOption.fieldOptionsId === fieldOption.id
+                      )
+                    ).length
+                  );
+                }
+                return 0;
+              }, 0)}
+            </Bar>
+          ))}
+        </BarChart> */}
+
+      {data?.questions.map((question, index) => {
+        // <ChartContainer config={chartConfig}>
+        //   <BarChart data={question.fieldOptions}>
+        //     {question.fieldOptions.map((fieldOption) => {
+        //       <XAxis dataKey="fieldOption.text" />;
+        //       const answersCount = question.fieldOptions.reduce(
+        //         (acc, fieldOption) => {
+        //           if (question.answers) {
+        //             acc +
+        //               question.answers.filter(
+        //                 (answer) => answer.fieldOption?.id === fieldOption.id
+        //                 // answerArr.some(
+        //                 //   (answer: Answer) =>
+        //                 //     answer.fieldOptionsId === fieldOption.id
+        //                 // )
+        //               ).length;
+        //           }
+        //           return 0;
+        //         },
+        //         0
+        //       );
+        //       return (
+        //         <Bar key={answersCount} dataKey={answersCount} fill="#3b82f6" />
+        //       );
+        //     })}
+        //     <ChartTooltip content={<ChartTooltipContent />} />
+        //   </BarChart>
+        // </ChartContainer>;
+
+        return (
+          <ChartContainer key="index" config={chartConfig}>
+            <BarChart data={question.fieldOptions}>
+              <XAxis dataKey="fieldOptions.value" tickLine={false} />
+              <Bar dataKey="fieldOption.id" fill="#3b82f6" />
+              <Bar dataKey="fieldOption.questionId" fill="#f59e0b" />
+              <ChartTooltip content={<ChartTooltipContent />} />
+            </BarChart>
+          </ChartContainer>
+        );
+      })}
+      <Button onClick={() => console.log("FORMSDATA: ", data?.questions[0])}>
+        Click
+      </Button>
     </div>
   );
 }
